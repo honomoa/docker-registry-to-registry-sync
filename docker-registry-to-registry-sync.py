@@ -7,6 +7,20 @@ from docker_registry_client import DockerRegistryClient
 from requests import HTTPError
 
 
+def get_repositories(client):
+    result = set()
+    try:
+        repositories = client.repositories()
+    except HTTPError as e:
+        if e.response.status_code == 404:
+            print("repositories not found")
+        else:
+            raise e
+
+    for repository in repositories:
+        result.add(repository)
+    return result
+
 def get_tags(client, repositories):
     result = set()
     for repository in repositories:
@@ -67,6 +81,7 @@ if __name__ == '__main__':
     dst_registry_url = config['destination_registry']['url']
     src_verify_ssl = config['source_registry']['verify_ssl']
     dst_verify_ssl = config['destination_registry']['verify_ssl']
+    all_repositories = config['all_repositories']
 
     src_username = None if 'username' not in config['source_registry'] else str(config['source_registry']['username'])
     src_password = determine_password(config, 'src')
@@ -88,7 +103,10 @@ if __name__ == '__main__':
     docker_client.login(registry=dst_registry_url, username=dst_username,
                         password=dst_password)
 
-    repositories = config['repositories']
+    if all_repositories:
+        repositories = get_repositories(src_client)
+    else:
+        repositories = config['repositories']
     src_tags = get_tags(src_client, repositories)
     dst_tags = get_tags(dst_client, repositories)
 

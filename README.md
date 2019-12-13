@@ -28,6 +28,8 @@ destination_registry:
   username: some_user
   password: some_password
 
+all_repositories: True
+
 repositories:
   - company/super-project
   - company/cool-project
