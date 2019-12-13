@@ -65,6 +65,8 @@ if __name__ == '__main__':
 
     src_registry_url = config['source_registry']['url']
     dst_registry_url = config['destination_registry']['url']
+    src_verify_ssl = config['source_registry']['verify_ssl']
+    dst_verify_ssl = config['destination_registry']['verify_ssl']
 
     src_username = None if 'username' not in config['source_registry'] else str(config['source_registry']['username'])
     src_password = determine_password(config, 'src')
@@ -74,10 +76,10 @@ if __name__ == '__main__':
     dst_password = determine_password(config, 'dst')
 
     src_client = DockerRegistryClient(src_registry_url, username=src_username,
-                                      password=src_password)
+                                      password=src_password, verify_ssl=src_verify_ssl)
 
     dst_client = DockerRegistryClient(dst_registry_url, username=dst_username,
-                                      password=dst_password)
+                                      password=dst_password, verify_ssl=dst_verify_ssl)
 
     docker_client = docker.from_env()
     docker_client.login(registry=src_registry_url, username=src_username,

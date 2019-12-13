@@ -18,11 +18,15 @@ Create a `config.yml` file. Example:
 ```yaml
 source_registry:
   url: https://docker.example.com
+  verify_ssl: True
   username: some_user
   password: some_password
 
 destination_registry:
   url: http://127.0.0.1:5000
+  verify_ssl: True
+  username: some_user
+  password: some_password
 
 repositories:
   - company/super-project
